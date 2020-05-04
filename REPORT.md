@@ -37,15 +37,15 @@ We further investigate whether these software frameworks allow dynamic resource 
 Since the BigGAN workflow is written in PyTorch, we wil focus on discussing the possibility of running/training Pytorch programs in an "elastic manner":
 
 ### 1.1 Elasticity for PyTorch
-According to Pytorch documentation [link here](https://pytorch.org/blog/pytorch-adds-new-tools-and-libraries-welcomes-preferred-networks-to-its-community/#tools-for-elastic-training-and-large-scale-computer-vision),  current PyTorch parallelism is achieved by something called **Distributed Data Parallel (DPP)** module, and it has following short-commings:  
+According to Pytorch documentation [link here](https://pytorch.org/blog/pytorch-adds-new-tools-and-libraries-welcomes-preferred-networks-to-its-community/#tools-for-elastic-training-and-large-scale-computer-vision),  current PyTorch parallelism is achieved by something called **Distributed Data Parallel (DDP)** module, and it has following short-commings:  
 
 1. Parallel jobs cannot start without aquiring all the request nodes(pod/containers).
-2. Parallel jobs is not recoverable from node(pod/container) failures.
-3. Parallel jobs is not able to incorporate nodes that join later.
+2. Parallel jobs are not recoverable from node(pod/container) failures.
+3. Parallel jobs are not able to incorporate nodes that join later.
 
 Recently the comunity is working on incorporating **elastic training** functionality to PyTorch. Experimental implementation of the functionality can be found at [PyTorch-Elastic](https://github.com/pytorch/elastic).  
 
-However, **PyTorch-Elastic** only supports AWS environment with Amazon Sagemaker and Elastic Kubernetes Service(EKS) and haven't support OpenShift yet.  
+However, **PyTorch-Elastic** only supports AWS environment with Amazon Sagemaker and Elastic Kubernetes Service(EKS) and haven't added support for OpenShift yet.  
 
 After discussion among group members, we figure that given the time and scope of our project, we might not be able to finish adapting **PyTorch-Elastic** to OpenShift environment and re-writing the BigGAN workflow using PyTorch-Elastic APIs by the end of the semester. We will leave it as a future TODO for now.
 <!-- <h5 align="center"> shawn </h5> -->
@@ -62,13 +62,13 @@ Compared with Satori, OpenShift does have more advantages on tasks automation. W
 
 ### 3.1 Components
 
-A typical AI workflow has deals with a lot state. The computation steps are resource intensive and long running. The model training step can run for a few days on the training datasets of size ~200 GB even on powerful hardware such as the Telsa V100 GPUs. The output model is contantly iterated upon during at the end of training loops, and the state is checkpointed typically at the end of every epoch.
+A typical AI workflow deals with a lot of state. The computation steps are resource intensive and long running. The model training step can run for a few days on the training datasets of size ~200 GB even on powerful hardware such as the Telsa V100 GPUs. The output model is constantly iterated upon during at the end of training loops, and the state is checkpointed typically at the end of every epoch.
 
 ### 3.2 Scheduling
 
 In a traditional HPC system like Satori, to run a job, you submit a  request for specific amount of resources, e.g. 4 GPUs and 2 CPUs. The scheduler waits for the resources to free, and then assigns the job.
 
-In a Kubernetes based environment, you make request to the scheduler, and the scheduler tries its best to provide you with the request resouces. However, it is not guaranteed that the resources alloted to you will not change during the lifecycle of the computation.
+In a Kubernetes based environment, you make a request to the scheduler, and the scheduler tries its best to provide you with the requested resources. However, it is not guaranteed that the resources allotted to you will not change during the lifecycle of the computation.
 
 
 ### 3.3 Software Style
